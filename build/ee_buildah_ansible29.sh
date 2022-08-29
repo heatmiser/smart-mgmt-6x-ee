@@ -4,11 +4,11 @@ set -ex
 # podman login registry.redhat.io
 # Username: {REGISTRY-SERVICE-ACCOUNT-USERNAME}
 # Password: {REGISTRY-SERVICE-ACCOUNT-PASSWORD}
-BASEIMAGEOWNER=ansible-automation-platform-20-early-access
+BASEIMAGEOWNER=ansible-automation-platform-22
 BASEIMAGENAME=ee-29-rhel8
-BIVERSION=2.0.1-6
-IMAGE=ee-automated-smart-mgmt-29
-VERSION=1.0.5
+BIVERSION=1.0.0-159
+IMAGE=ee-automated-smart-mgmt-29dev
+VERSION=1.0.7
 START_DIR=$(pwd)
 TMP_WRKDIR=$(mktemp -d /tmp/XXXXXXXX)
 ctr=$(buildah from registry.redhat.io/$BASEIMAGEOWNER/$BASEIMAGENAME:$BIVERSION)
@@ -17,9 +17,9 @@ buildah run $ctr /bin/sh -c 'python3 -m pip install jinja2==2.11.3'
 buildah run $ctr /bin/sh -c 'python3 -m pip install apypie'
 buildah run $ctr /bin/sh -c 'python3 -m pip install psycopg2-binary'
 cd $TMP_WRKDIR
-git clone https://github.com/redhat-partner-tech/automated-smart-management.git
-cd automated-smart-management
-git checkout ee-build-source
+git clone https://github.com/heatmiser/smart-mgmt-6x-ee.git
+cd smart-mgmt-6x-ee
+git checkout dev
 buildah copy $ctr 'roles/content_views' '/usr/share/ansible/roles/content_views'
 buildah copy $ctr 'roles/ec2_node_tools' '/usr/share/ansible/roles/ec2_node_tools'
 buildah copy $ctr 'roles/rhsm_register' '/usr/share/ansible/roles/rhsm_register'
